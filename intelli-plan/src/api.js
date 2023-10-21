@@ -2,6 +2,10 @@ import { OpenAI } from "langchain/llms/openai";
 import { PromptTemplate } from "langchain/prompts";
 import { StringOutputParser } from "langchain/schema/output_parser";
 import { RunnableSequence } from "langchain/schema/runnable";
+import { z } from "zod";
+import { StructuredOutputParser } from "langchain/output_parsers";
+
+
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -9,6 +13,9 @@ dotenv.config();
 const model = new OpenAI({
     temperature: 0.0,
 });
+
+const outputModel = new OpenAI({ maxTokens: 2000 });
+
 
 const prompt1 = PromptTemplate.fromTemplate(`
 You are acting as a professional project management engineer.
@@ -92,7 +99,9 @@ assign team members to the best of your ability.
 Assign people after each issue, in the format:
 [issue] : [assignees]
 
-Improved plan: `);
+Now convert this into proper JSON with keys 'start_date', 'end_date', 'issue', 'assignees'.
+
+JSON structured plan: `);
 
 const frameworkChain = prompt1.pipe(model).pipe(new StringOutputParser());
 
@@ -122,9 +131,11 @@ const secondLastChain = RunnableSequence.from([
         team_members: (input) => input.team_members
     },
     prompt4,
-    model,
+    outputModel,
     new StringOutputParser()
 ]);
+
+
 
 const team_members = `
 ## Team member one
@@ -140,21 +151,25 @@ const team_members = `
     Preferences: anything backend
 
 ## Team member three
-    Name: Liv
+    Name: Don
     Role: Lead designer
     Skills: Web design, user experience
     Preferences: Making things pretty
 `
 
-const result = await secondLastChain.invoke({
-    start_date: "October 20, 2023",
-    end_date: "January 1, 2023",
-    project_description: "A application that automates the application process by using LLMs to consume job posting data and write custom cover letters",
-    tech_stack: "Want to use Langchain and TypeScript for the language. Remix for frontend. Chromadb for the backend.",
-    features: "Automatic cover letter generation. Pass robot check.",
-    team_members: team_members
-});
 
-console.log(result);
+try{
+    const result = await secondLastChain.invoke({
+        start_date: "October 20, 2023",
+        end_date: "January 1, 2023",
+        project_description: "A application that automates the application process by using LLMs to consume job posting data and write custom cover letters",
+        tech_stack: "Want to use Langchain and TypeScript for the language. Remix for frontend. Chromadb for the backend.",
+        features: "Automatic cover letter generation. Pass robot check.",
+        team_members: team_members
+    });
+    console.log(result)
+} catch(err) {
+    console.log("error")
+}
 
 
