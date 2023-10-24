@@ -1,0 +1,17 @@
+modules:
+  jira:issuePanel:
+    - key: smart-plan-hello-world-issue-panel
+      resource: main
+      resolver:
+        function: resolver
+      render: native
+      title: smart-plan
+      icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
+  function:
+    - key: resolver
+      handler: index.handler
+resources:
+  - key: main
+    path: src/frontend/index.jsx
+app:
+  id: ari:cloud:ecosystem::app/8aa768aa-1796-44a5-8072-12a2b568d846
