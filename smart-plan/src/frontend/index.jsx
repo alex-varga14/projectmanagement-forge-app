@@ -67,7 +67,36 @@ const App = () => {
   //   }
   // }
 
-  const generateProjectPlan = (formData) => {
+  // const createProjectPlan = async (formData) => {
+  //   setNewFeature('');
+  //   setNewTeamMember('');
+  //   formData.features = features;
+  //   formData.team = teamMembers;
+
+  //   setFormState(formData)
+  //   console.log('DATA --', formData)
+  //   // // const { startDate, endDate, projectDescription } = formData;
+
+  //   try {
+  //     const generatedTasks = await invoke('generateProjectPlan', {
+  //       start_date: formData.startDate,
+  //       end_date: formData.endDate,
+  //       project_description: formData.projectDescription,
+  //       tech_stack: formData.stack,
+  //       features: formData.features,
+  //       team_members: formData.team,
+  //     });
+  //     console.log('Generated Project Result Plan:', generatedTasks);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+
+  //   setFormState(formData);
+
+  //   //generateTasks(generatedTasks)
+  // };
+
+  const createProjectPlan = (formData) => {
     setNewFeature('');
     setNewTeamMember('');
     formData.features = features;
@@ -87,6 +116,7 @@ const App = () => {
         team_members: formData.team,
       });
       console.log('Generated Project Result Plan:', generatedTasks);
+      console.log('PAYLOADn:', generatedTasks.payload);
     } catch (error) {
       console.error(error);
     }
@@ -96,9 +126,10 @@ const App = () => {
     //generateTasks(generatedTasks)
   };
 
+
   return (
     <>
-      <Form onSubmit={generateProjectPlan}>
+      <Form onSubmit={createProjectPlan}>
         <DatePicker
             name="startDate"
             label="Start Date"

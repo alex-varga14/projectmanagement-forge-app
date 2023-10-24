@@ -38,13 +38,33 @@ const lastLink = RunnableSequence.from([
   new StringOutputParser(),
 ]);
 
-export async function generateProjectPlan(input) {
+export async function GenerateProjectPlan(start_date, end_date, project_description, tech_stack, features, team_members) {
+  let llmResponse;
+
   try {
-    console.log('INPUT -', input)
-    const result = lastLink.invoke(input);
-    return JSON.parse(result);
+    const result = await lastLink.invoke({
+      start_date: start_date,
+      end_date: end_date,
+      project_description: project_description,
+      tech_stack: tech_stack,
+      features: features,
+      team_members: team_members
+    });
+    llmResponse = JSON.parse(result);
   } catch (err) {
-    console.error(err);
-    return null;
+    console.log(err);
   }
+
+  return llmResponse
 }
+
+// export async function generateProjectPlan(input) {
+//   try {
+//     console.log('INPUT -', input)
+//     const result = lastLink.invoke(input);
+//     return JSON.parse(result);
+//   } catch (err) {
+//     console.error(err);
+//     return null;
+//   }
+// }

@@ -13,7 +13,15 @@ modules:
 resources:
   - key: main
     path: src/frontend/index.jsx
+
+permissions:
+  external:
+    fetch:
+      backend:
+        - 'api.openai.com'
+        - 'https://api.smith.langchain.com'
 app:
   id: ari:cloud:ecosystem::app/8aa768aa-1796-44a5-8072-12a2b568d846
   runtime:
+    name: nodejs18.x
     snapshots: false
