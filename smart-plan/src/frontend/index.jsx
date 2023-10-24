@@ -25,7 +25,7 @@ const App = () => {
       setFeatures([...features, newFeature]);
       setNewFeature('');
     }
-  };
+  }; 
 
   // async function GenerateTask(taskName, taskDescription, taskDueDate, projKey){
   //   var bodyData = `{
@@ -67,7 +67,7 @@ const App = () => {
   //   }
   // }
 
-  const generateProjectPlan = async (formData) => {
+  const generateProjectPlan = (formData) => {
     setNewFeature('');
     setNewTeamMember('');
     formData.features = features;
@@ -77,15 +77,19 @@ const App = () => {
     console.log('DATA --', formData)
     // // const { startDate, endDate, projectDescription } = formData;
 
-    const generatedTasks = await invoke('generateProjectPlan', {
-      start_date: formData.startDate, // Use the formData properties as arguments
-      end_date: formData.endDate, // Use the formData properties as arguments
-      project_description: formData.projectDescription, // Use the formData properties as arguments
-      tech_stack: formData.stack,
-      features: formData.features,
-      team_members: formData.team,
-    });
-    console.log('Generated Project Result Plan:', generatedTasks)
+    try {
+      const generatedTasks = invoke('generateProjectPlan', {
+        start_date: formData.startDate,
+        end_date: formData.endDate,
+        project_description: formData.projectDescription,
+        tech_stack: formData.stack,
+        features: formData.features,
+        team_members: formData.team,
+      });
+      console.log('Generated Project Result Plan:', generatedTasks);
+    } catch (error) {
+      console.error(error);
+    }
 
     setFormState(formData);
 
@@ -135,7 +139,11 @@ const App = () => {
         </Button>
 
         {features.map((feature, index) => (
-          <Badge key={index} text={feature}/>
+          <Badge 
+            appearance="primary" 
+            key={index} 
+            text={feature}
+          />
         ))}
         
         <TextField 
@@ -152,7 +160,11 @@ const App = () => {
           Add Team Member
         </Button>
         {teamMembers.map((member, index) => (
-          <Badge key={index} text={member}/>
+          <Badge 
+            appearance="added" 
+            key={index} 
+            text={member}
+          />
         ))}
       </Form>
       {formState && <Text>{JSON.stringify(formState)}</Text>}

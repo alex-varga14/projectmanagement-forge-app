@@ -38,8 +38,9 @@ const lastLink = RunnableSequence.from([
   new StringOutputParser(),
 ]);
 
-export function generateProjectPlan(input) {
+export async function generateProjectPlan(input) {
   try {
+    console.log('INPUT -', input)
     const result = lastLink.invoke(input);
     return JSON.parse(result);
   } catch (err) {

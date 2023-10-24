@@ -1,4 +1,4 @@
-import { PromptTemplate } from "langchain/prompts.js";
+import { PromptTemplate } from "langchain/prompts";
 
 export const prompt1 = PromptTemplate.fromTemplate(`
 You are a professional project management engineer creating a project plan.
