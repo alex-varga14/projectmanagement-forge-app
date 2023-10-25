@@ -3,3 +3,5 @@
 /Scripts
 /Lib
 src/.env
+Lib
+/api/node_modules
