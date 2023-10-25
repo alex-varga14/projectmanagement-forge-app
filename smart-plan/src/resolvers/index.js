@@ -16,7 +16,7 @@ const outputModel = new OpenAI({ modelName: "gpt-4", maxTokens: 2000, temperatur
 
 const baseLink = prompt1.pipe(model).pipe(new StringOutputParser());
 
-// Compute tech stack project features 
+/* Compute tech stack project features */
 const firstLink = RunnableSequence.from([
   {
     project_plan: baseLink,
@@ -28,7 +28,7 @@ const firstLink = RunnableSequence.from([
   new StringOutputParser(),
 ]);
 
-// Compute team members with skills and descriptions
+/* Compute team members with skills and descriptions */
 const secondLink = RunnableSequence.from([
   {
     project_plan: firstLink,
@@ -39,7 +39,7 @@ const secondLink = RunnableSequence.from([
   new StringOutputParser(),
 ]);
 
-// Compute final link and output
+/* Compute final link and output */
 const lastLink = RunnableSequence.from([
   {
     project_plan: secondLink,
@@ -53,7 +53,7 @@ const lastLink = RunnableSequence.from([
 const asyncResolver = new Resolver();
 const uiResolver = new Resolver()
 
-// Sample team member data 
+/* Sample team member data */
 const team_members = `
 ## Team member one
     Name: Alex
@@ -74,7 +74,7 @@ const team_members = `
     preferences: Making things pretty and testing
 `;
 
-// Sample feature data 
+/* Sample feature data */
 const features = `
 - multilingual
 - order items
@@ -83,11 +83,11 @@ const features = `
 - checkout on request
 `;
 
-// Asynchronously generate project plan through call to llm
+/* Asynchronously generate project plan through call to llm */
 const generateProjectPlan = async (planData) => {
   let llmResponse;
 
- // Invoke project details
+ /* Invoke project details */
   try {
     const result = await lastLink.invoke({
       start_date: planData.start_date,
@@ -102,7 +102,7 @@ const generateProjectPlan = async (planData) => {
     /* UNABLE TO GET JS TO WORK WITH FORGE API, Able to using python script */
     //const final = await generateTasks(llmResponse);
 
-   // Currently returns 
+   /* Currently returns llm response */
     return llmResponse
   } catch (err) {
     console.log(err);
@@ -110,6 +110,7 @@ const generateProjectPlan = async (planData) => {
   }
 }
 
+/* Add generate project process to event queue */
 asyncResolver.define('promptEventListener', async (queueItem) => {
   const plan = queueItem.payload;
   const planContext = queueItem.context;
@@ -118,9 +119,11 @@ asyncResolver.define('promptEventListener', async (queueItem) => {
   await storage.set(planId, generatedPlan) 
 });
 
+/*  queue Atlassian Forge ui resoltion to */
 uiResolver.define('buildingProjectPlanFromInfo', async (req) => {
   console.log('REQ::: ', req)
 
+ //define project data
   const projectId = req.context.extension.project.id;
   const projectData = req.payload;
   
@@ -128,10 +131,14 @@ uiResolver.define('buildingProjectPlanFromInfo', async (req) => {
     id: projectId,
     projectData: projectData
   }
+
+  // push to event queue
   await queue.push(projectJob);
   return projectJob;
 });
 
+
+/* Poll llm results from atlassian storage */
 uiResolver.define("pollTaskResult", async (req) => {
   // check if done
   const planId = req.payload.planId.id;
