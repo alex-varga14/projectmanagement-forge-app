@@ -16,6 +16,7 @@ const outputModel = new OpenAI({ modelName: "gpt-4", maxTokens: 2000, temperatur
 
 const baseLink = prompt1.pipe(model).pipe(new StringOutputParser());
 
+// Compute tech stack project features 
 const firstLink = RunnableSequence.from([
   {
     project_plan: baseLink,
@@ -27,6 +28,7 @@ const firstLink = RunnableSequence.from([
   new StringOutputParser(),
 ]);
 
+// Compute team members with skills and descriptions
 const secondLink = RunnableSequence.from([
   {
     project_plan: firstLink,
@@ -37,6 +39,7 @@ const secondLink = RunnableSequence.from([
   new StringOutputParser(),
 ]);
 
+// Compute final link and output
 const lastLink = RunnableSequence.from([
   {
     project_plan: secondLink,
@@ -50,6 +53,7 @@ const lastLink = RunnableSequence.from([
 const asyncResolver = new Resolver();
 const uiResolver = new Resolver()
 
+// Sample team member data 
 const team_members = `
 ## Team member one
     Name: Alex
@@ -70,6 +74,7 @@ const team_members = `
     preferences: Making things pretty and testing
 `;
 
+// Sample feature data 
 const features = `
 - multilingual
 - order items
@@ -78,49 +83,11 @@ const features = `
 - checkout on request
 `;
 
-// const GenerateTask = async (taskName, taskDescription, taskDueDate, projKey) => {
-//   var bodyData = `{
-//       "fields": {
-//         "project":
-//         {
-//             "key": "${projKey}"  
-//         },
-//         "summary": "${taskName}",
-//         "description": "${taskDescription}",
-//         "issuetype": {
-//             "name": "Task"
-//         }
-//         "duedate": "${taskDueDate}"
-//     }
-//   }`;
-
-//   const final = await api.asApp().requestJira(route`/rest/api/3/issue`, {
-//       method: 'POST',
-//       headers: {
-//         'Accept': 'application/json',
-//         'Content-Type': 'application/json'
-//       },
-//       body: bodyData
-//     });
-
-//     return final
-// }
-
-// const generateTasks = async (taskData) => {
-//   for (const key in taskData) {
-//     try{
-//       const { start_date, end_date, issue, assignees } = taskData[key];
-//       const final = await GenerateTask(start_date, issue, end_date, 'IP');
-//       return final
-//     } catch (err) {
-//       return {'message': err}
-//     }
-//   }    
-//     // You can also use the 'assignees' property to assign the task to specific team members.
-// }
-
+// Asynchronously generate project plan through call to llm
 const generateProjectPlan = async (planData) => {
   let llmResponse;
+
+ // Invoke project details
   try {
     const result = await lastLink.invoke({
       start_date: planData.start_date,
@@ -134,6 +101,8 @@ const generateProjectPlan = async (planData) => {
     llmResponse = JSON.parse(result);
     /* UNABLE TO GET JS TO WORK WITH FORGE API, Able to using python script */
     //const final = await generateTasks(llmResponse);
+
+   // Currently returns 
     return llmResponse
   } catch (err) {
     console.log(err);
