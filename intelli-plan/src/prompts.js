@@ -1,3 +1,8 @@
+// 
+// prompts.js
+// 
+// prompts that the LLMChain uses.
+// 
 import { PromptTemplate } from "langchain/prompts";
 
 export const prompt1 = PromptTemplate.fromTemplate(`
