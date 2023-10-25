@@ -1,3 +1,5 @@
 .env
+/pyvenv.cfg
+/Scripts
+/Lib
 src/.env
-intelli-plan/node_modules

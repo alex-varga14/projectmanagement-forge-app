@@ -1,10 +1,12 @@
 import jira.client
 from jira.client import JIRA
 
-EMAIL='domvandekerkhove@gmail.com'
-SITE='http://dom-test-site.atlassian.net'
-SERVER="https://dom-test-site.atlassian.net"
-API_KEY='ATATT3xFfGF0evHHFRoEPe8fYZ6aG6fPF10MXBAiYbLhSTk8tOsmcR8ys1wIWXUEmGneYf_lv_sx6mgujHRiMElkYMu-sO2a7mGLwPQD08LFgaBAd-vqe1gQpk7iijBSU065RUKvMlyUusWi32BwIWc7zVCmaT4zVz8awj9RcOxEOF8REHvNyvk=8610F6FF'
+#from dotenv import load_dotenv
+
+EMAIL='alexanderv1414@gmail.com'
+SITE='http://intelli-plan.atlassian.net'
+SERVER="https://intelli-plan.atlassian.net"
+API_KEY='ATATT3xFfGF0rYABLUSXz389Qz4N0QscxRr-cUdcVBOwYsngh20R6fGcNeCD8McIRfMfSaHhHry2aAFC2K9mP74fvCXbi5e2LFJfsHayAACRNC26AeC_WaA7aqnDXPZyrEzGLvA-X2FB6Ce9XZugT3X2wn1RYLmxMQxGEqx0YSxhWY9yO_gc94I=B74F6D0B'
 
 class JiraControls():
     def authenticate(self, site, email, server):
