@@ -78,48 +78,47 @@ const features = `
 - checkout on request
 `;
 
-const GenerateTask = async (taskName, taskDescription, taskDueDate, projKey) => {
-  var bodyData = `{
-      "fields": {
-        "project":
-        {
-            "key": "${projKey}"  
-        },
-        "summary": "${taskName}",
-        "description": "${taskDescription}",
-        "issuetype": {
-            "name": "Task"
-        }
-        "duedate": "${taskDueDate}"
-    }
-  }`;
+// const GenerateTask = async (taskName, taskDescription, taskDueDate, projKey) => {
+//   var bodyData = `{
+//       "fields": {
+//         "project":
+//         {
+//             "key": "${projKey}"  
+//         },
+//         "summary": "${taskName}",
+//         "description": "${taskDescription}",
+//         "issuetype": {
+//             "name": "Task"
+//         }
+//         "duedate": "${taskDueDate}"
+//     }
+//   }`;
 
-  const final = await api.asApp().requestJira(route`/rest/api/3/issue`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: bodyData
-    });
+//   const final = await api.asApp().requestJira(route`/rest/api/3/issue`, {
+//       method: 'POST',
+//       headers: {
+//         'Accept': 'application/json',
+//         'Content-Type': 'application/json'
+//       },
+//       body: bodyData
+//     });
 
-    return final
-}
+//     return final
+// }
 
-const generateTasks = async (taskData) => {
-  for (const key in taskData) {
-    try{
-      const { start_date, end_date, issue, assignees } = taskData[key];
-      const final = await GenerateTask(start_date, issue, end_date, 'IP');
-      return final
-    } catch (err) {
-      return {'message': err}
-    }
-  }    
-    // You can also use the 'assignees' property to assign the task to specific team members.
-}
+// const generateTasks = async (taskData) => {
+//   for (const key in taskData) {
+//     try{
+//       const { start_date, end_date, issue, assignees } = taskData[key];
+//       const final = await GenerateTask(start_date, issue, end_date, 'IP');
+//       return final
+//     } catch (err) {
+//       return {'message': err}
+//     }
+//   }    
+//     // You can also use the 'assignees' property to assign the task to specific team members.
+// }
 
-// async function GenerateProjectPlan(start_date, end_date, project_description, tech_stack, features, team_members) {
 const generateProjectPlan = async (planData) => {
   let llmResponse;
   try {
@@ -133,9 +132,9 @@ const generateProjectPlan = async (planData) => {
     });
     //return await generateTasks(JSON.parse(result));
     llmResponse = JSON.parse(result);
-    const final = await generateTasks(llmResponse);
-    return final
-    // return { message: result }
+    /* UNABLE TO GET JS TO WORK WITH FORGE API, Able to using python script */
+    //const final = await generateTasks(llmResponse);
+    return llmResponse
   } catch (err) {
     console.log(err);
     return { message: err}
@@ -173,11 +172,6 @@ uiResolver.define("pollTaskResult", async (req) => {
     await storage.delete(planId);
   }
   return result;
-  const pollResult = {
-    status: result ? result.status : 404,
-    planData: result ? planId.projectData : undefined 
-  }
-  return pollResult;
 });
 
 export const asyncHandler = asyncResolver.getDefinitions();

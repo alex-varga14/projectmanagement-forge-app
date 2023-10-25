@@ -5,7 +5,7 @@ modules:
       resolver:
         function: resolver
       render: native
-      title: smart-plan
+      title: Intelli-Plan
       icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
 
   consumer:
