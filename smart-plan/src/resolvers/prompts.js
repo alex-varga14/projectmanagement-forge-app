@@ -16,6 +16,21 @@ Below the user defines the project's starting and ending dates and the project d
     {project_description}
 </project_description>
 
+Given the information you've received, output the skeleton of a project plan, with general goals of when
+certain tasks should be finished.
+
+Take a deep breath, and work it out step by step.
+
+Plan:`);
+
+export const prompt2 = PromptTemplate.fromTemplate(`
+You are a professional project management engineer creating a project plan.
+Below is the project plan you are working on improving. 
+
+<project_plan>
+  {project_plan}
+</project_plan>
+
 <tech_stack>
   {tech_stack}
 </tech_stack>
@@ -24,53 +39,30 @@ Below the user defines the project's starting and ending dates and the project d
   {features}
 </features>
 
-Given the information you've received, output the skeleton of a project plan, with general goals of when
-certain tasks should be finished.
+For the project plan, decompose each issue into the format below: 
+[start]-[end] : [issue] [description of issue]  
 
 Take a deep breath, and work it out step by step.
 
-Plan:`);
+Project plan: `);
 
-// export const prompt2 = PromptTemplate.fromTemplate(`
-// You are a professional project management engineer creating a project plan.
-// Below is the project plan you are working on improving. 
+export const prompt3 = PromptTemplate.fromTemplate(`
+You are a professional project management engineer creating a project plan.
+Below is the project plan you are working on improving and the team members with their skills and preferences.
 
-// <project_plan>
-//   {project_plan}
-// </project_plan>
+<project_plan>
+  {project_plan}
+</project_plan>
 
-// <tech_stack>
-//   {tech_stack}
-// </tech_stack>
+<team>
+    {team_members}
+</team>
 
-// <features>
-//   {features}
-// </features>
+Use the team information and assign team members by name to work on based on their skills and preferences.
 
-// For the project plan, decompose each issue into the format below: 
-// [start]-[end] : [issue] [description of issue]  
+Take a deep breath, and work step by step.
 
-// Take a deep breath, and work it out step by step.
-
-// Project plan: `);
-
-// export const prompt3 = PromptTemplate.fromTemplate(`
-// You are a professional project management engineer creating a project plan.
-// Below is the project plan you are working on improving and the team members with their skills and preferences.
-
-// <project_plan>
-//   {project_plan}
-// </project_plan>
-
-// <team>
-//     {team_members}
-// </team>
-
-// Use the team information and assign team members by name to work on based on their skills and preferences.
-
-// Take a deep breath, and work step by step.
-
-// Decomposed plan: `);
+Decomposed plan: `);
 
 export const prompt4 = PromptTemplate.fromTemplate(`
 You are a professional project management engineer creating a project plan.

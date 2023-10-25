@@ -9,23 +9,14 @@ const App = () => {
 
   const [features, setFeatures] = useState([]);
   const [newFeature, setNewFeature] = useState('')
-
   const [teamMembers, setTeamMembers] = useState([]);
   const [newTeamMember, setNewTeamMember] = useState('');
 
-  const addTeamMember = () => {
-    if (newTeamMember) {
-      setTeamMembers([...teamMembers, newTeamMember]);
-      setNewTeamMember('');
-    }
-  };
+  const [planGeneration, setPlanGeneration] = useState(null);
+  const [planId, setPlanId] = useState(null);
+  const [result, setResult] = useState(null);
 
-  const addFeature = () => {
-    if (newFeature) {
-      setFeatures([...features, newFeature]);
-      setNewFeature('');
-    }
-  }; 
+  let planPollHandle = null;
 
   // async function GenerateTask(taskName, taskDescription, taskDueDate, projKey){
   //   var bodyData = `{
@@ -58,6 +49,7 @@ const App = () => {
 
   // async function generateTasks(generatedTasks) {
   //   for (const task of generatedTasks) {
+  //     console.log("TASK -", task)
   //     const { start_date, end_date, issue, assignees } = task;
   
   //     // Call the GenerateTask function for each task
@@ -67,64 +59,70 @@ const App = () => {
   //   }
   // }
 
-  // const createProjectPlan = async (formData) => {
-  //   setNewFeature('');
-  //   setNewTeamMember('');
-  //   formData.features = features;
-  //   formData.team = teamMembers;
+  const pollForTasks = async (planId) => {
+    console.log('PULLING TASKS', planId);
+    if (planId) {
+      const result = await invoke ('pollTaskResult', {planId: planId});
+      console.log("RESULT - ", result)
+      console.log(`STRING RESULT = ${JSON.stringify(result)}`)
+      if (result && result.status !== 404) {
+        setPlanGeneration(false);
+        console.log(`Setting result to ${JSON.stringify(result.planData)}...`);
+        setResult(result);
+        setPlanId(null);
+        if(planPollHandle) {
+          console.log(`Clearing Interval...`);
+          clearInterval(planPollHandle);
+          planPollHandle = null;
+        } else {
+          console.log(`No interval handle to clear.`);
+        }
+      }
+    }
+  }
 
-  //   setFormState(formData)
-  //   console.log('DATA --', formData)
-  //   // // const { startDate, endDate, projectDescription } = formData;
-
-  //   try {
-  //     const generatedTasks = await invoke('generateProjectPlan', {
-  //       start_date: formData.startDate,
-  //       end_date: formData.endDate,
-  //       project_description: formData.projectDescription,
-  //       tech_stack: formData.stack,
-  //       features: formData.features,
-  //       team_members: formData.team,
-  //     });
-  //     console.log('Generated Project Result Plan:', generatedTasks);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-
-  //   setFormState(formData);
-
-  //   //generateTasks(generatedTasks)
-  // };
-
-  const createProjectPlan = (formData) => {
+  const createProjectPlan = async (formData) => {
     setNewFeature('');
     setNewTeamMember('');
     formData.features = features;
     formData.team = teamMembers;
-
     setFormState(formData)
-    console.log('DATA --', formData)
-    // // const { startDate, endDate, projectDescription } = formData;
 
-    try {
-      const generatedTasks = invoke('generateProjectPlan', {
-        start_date: formData.startDate,
-        end_date: formData.endDate,
-        project_description: formData.projectDescription,
-        tech_stack: formData.stack,
-        features: formData.features,
-        team_members: formData.team,
-      });
-      console.log('Generated Project Result Plan:', generatedTasks);
-      console.log('PAYLOADn:', generatedTasks.payload);
-    } catch (error) {
-      console.error(error);
-    }
-
-    setFormState(formData);
+    setPlanGeneration(true);
+    const planId = await invoke('buildingProjectPlanFromInfo', {
+      start_date: formData.startDate,
+      end_date: formData.endDate,
+      project_description: formData.projectDescription,
+      tech_stack: formData.stack,
+      features: formData.features,
+      team_members: formData.team,
+    });
+    //console.log('PLAN GENERTTAED =', planId)
+    setPlanId(planId);
+    console.log("BEFORE LOOP PLAN ID: ", planId.id);
+    console.log("BEFORE LOOP PROJECT DATA: ", planId.projectData);
+    planPollHandle = setInterval(async () => {
+      await pollForTasks(planId);
+      console.log("PLAN ID: ", planId.id);
+      console.log("PROJECT DATA: ", planId.projectData);
+    }, 40000);
 
     //generateTasks(generatedTasks)
   };
+
+  const addTeamMember = () => {
+    if (newTeamMember) {
+      setTeamMembers([...teamMembers, newTeamMember]);
+      setNewTeamMember('');
+    }
+  };
+
+  const addFeature = () => {
+    if (newFeature) {
+      setFeatures([...features, newFeature]);
+      setNewFeature('');
+    }
+  }; 
 
 
   return (

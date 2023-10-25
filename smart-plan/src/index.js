@@ -1,1 +1,2 @@
-export { handler } from './resolvers/index.js';
+export { asyncHandler, uiHandler } from './resolvers/index.js';
+

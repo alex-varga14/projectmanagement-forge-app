@@ -7,14 +7,24 @@ modules:
       render: native
       title: smart-plan
       icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
+
+  consumer:
+    - key: prompt-consumer
+      queue: prompt-info
+      resolver:
+        function: queue-fn
+        method: promptEventListener
   function:
+    - key: queue-fn
+      handler: index.asyncHandler
     - key: resolver
-      handler: index.handler
+      handler: index.uiHandler
 resources:
   - key: main
     path: src/frontend/index.jsx
-
 permissions:
+  scopes:
+    - storage:app
   external:
     fetch:
       backend:

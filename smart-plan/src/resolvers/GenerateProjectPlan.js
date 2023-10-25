@@ -3,8 +3,8 @@ import { OpenAI } from "langchain/llms/openai";
 import { StringOutputParser } from "langchain/schema/output_parser";
 import { prompt1, prompt2, prompt3, prompt4 } from "./prompts.js";
 
-const model = new OpenAI({ temperature: 0.0 });
-const outputModel = new OpenAI({ maxTokens: 2000, temperature: 0.0 });
+const model = new OpenAI({ temperature: 1.0 });
+const outputModel = new OpenAI({ modelName: "gpt-4", maxTokens: 2000, temperature: 0.0 });
 
 const baseLink = prompt1.pipe(model).pipe(new StringOutputParser());
 

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@forge/bridge": "3.0.0",
+    "@forge/events": "^0.8.21",
     "@forge/react": "8.1.5",
     "@forge/resolver": "1.5.19",
     "@forge/ui": "^1.9.9",
