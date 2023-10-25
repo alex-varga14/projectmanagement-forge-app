@@ -18,7 +18,7 @@ const App = () => {
 
   let planPollHandle = null;
 
-
+  /* Poll llm agent for tasks it has created from prompt */
   const pollForTasks = async (planId) => {
     console.log('PULLING TASKS', planId);
     if (planId) {
@@ -40,6 +40,7 @@ const App = () => {
     }
   }
 
+  /* Generate project plan from tasks */
   const createProjectPlan = async (formData) => {
     setNewFeature('');
     setNewTeamMember('');
@@ -69,6 +70,7 @@ const App = () => {
     // await generateTasks(generatedTasks)
   };
 
+  /* add Team Members to project */
   const addTeamMember = () => {
     if (newTeamMember) {
       setTeamMembers([...teamMembers, newTeamMember]);
@@ -76,6 +78,7 @@ const App = () => {
     }
   };
 
+  /* Add features to project plan */
   const addFeature = () => {
     if (newFeature) {
       setFeatures([...features, newFeature]);
@@ -84,6 +87,7 @@ const App = () => {
   }; 
 
 
+  /* Return form with fields for project */
   return (
     <>
       <Form onSubmit={createProjectPlan}>
