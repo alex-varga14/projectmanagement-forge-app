@@ -3,14 +3,20 @@
 ## Architecture
 ![project-planner-forge-architecture](project-planner-forge-architecture.svg)
 
-## Installation Instructions - Windows
-
-### From GitHub
-1. Follow Windows 10 instructions to install Node.JS [Install Forge On Windows](https://developer.atlassian.com/platform/forge/installing-forge-on-windows/)!
-2. 
+## Installation Instructions For Windows
 
 ### From Atlassian Distribution
 1. Install from Link [Install Directly](https://developer.atlassian.com/console/install/8aa768aa-1796-44a5-8072-12a2b568d846?signature=780749fb21037b7880f34b775f92c7e0d3c406970756f477baeae58715efde203c57fbee7e8ad54d8339637d74cffe112995f003a028911d882870ca0c51236a&product=jira)!
+
+### From GitHub
+1. Follow Windows 10 instructions to install Node.JS [Install Forge On Windows](https://developer.atlassian.com/platform/forge/installing-forge-on-windows/)!
+2. Install the Forge CLI and create an Atlassian API Key [Install Forge CLI](https://developer.atlassian.com/platform/forge/getting-started/#install-the-forge-cli)!
+3. Clone GitHub Repository
+4. From smart-plan dir, run `npm install`
+5. Ensure OPEN_AI_API Env key is set using `forge varibles set OPENAI_API_KEY <your-api-key>`
+6. Run `forge deploy`
+7. Run `forge install` and follow the according instructions.
+
 
 ## Inspiration
 
