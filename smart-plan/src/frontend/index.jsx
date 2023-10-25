@@ -18,46 +18,6 @@ const App = () => {
 
   let planPollHandle = null;
 
-  // async function GenerateTask(taskName, taskDescription, taskDueDate, projKey){
-  //   var bodyData = `{
-  //       "fields": {
-  //         "project":
-  //         {
-  //             "key": "${projKey}"  
-  //         },
-  //         "summary": "${taskName}",
-  //         "description": "${taskDescription}",
-  //         "issuetype": {
-  //             "name": "Task"
-  //         }
-  //         "duedate": "${taskDueDate}"
-  //     }
-  //   }`;
-
-  //   const response = await api.asApp().requestJira(route`/rest/api/3/issue`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Accept': 'application/json',
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: bodyData
-  //     });
-
-  //     console.log(`Response: ${response.status} ${response.statusText}`);
-  //     console.log(await response.json());
-  // }
-
-  // async function generateTasks(generatedTasks) {
-  //   for (const task of generatedTasks) {
-  //     console.log("TASK -", task)
-  //     const { start_date, end_date, issue, assignees } = task;
-  
-  //     // Call the GenerateTask function for each task
-  //     await GenerateTask(issue, `Description for ${issue}`, end_date, 'TEST');
-  
-  //     // You can also use the 'assignees' property to assign the task to specific team members.
-  //   }
-  // }
 
   const pollForTasks = async (planId) => {
     console.log('PULLING TASKS', planId);
@@ -67,7 +27,6 @@ const App = () => {
       console.log(`STRING RESULT = ${JSON.stringify(result)}`)
       if (result && result.status !== 404) {
         setPlanGeneration(false);
-        console.log(`Setting result to ${JSON.stringify(result.planData)}...`);
         setResult(result);
         setPlanId(null);
         if(planPollHandle) {
@@ -107,7 +66,7 @@ const App = () => {
       console.log("PROJECT DATA: ", planId.projectData);
     }, 40000);
 
-    //generateTasks(generatedTasks)
+    // await generateTasks(generatedTasks)
   };
 
   const addTeamMember = () => {

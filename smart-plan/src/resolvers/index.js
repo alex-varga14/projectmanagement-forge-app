@@ -5,11 +5,13 @@ import { StringOutputParser } from "langchain/schema/output_parser";
 import { prompt1, prompt2, prompt3, prompt4 } from "./prompts.js";
 import {storage} from "@forge/api";
 
+import api, { route } from '@forge/api';
+
 import { Queue } from '@forge/events';
  
 const queue = new Queue ({key: 'prompt-info'})
 
-const model = new OpenAI({ temperature: 1.0 });
+const model = new OpenAI({ temperature: 0.0 });
 const outputModel = new OpenAI({ modelName: "gpt-4", maxTokens: 2000, temperature: 0.0 });
 
 const baseLink = prompt1.pipe(model).pipe(new StringOutputParser());
@@ -76,6 +78,47 @@ const features = `
 - checkout on request
 `;
 
+const GenerateTask = async (taskName, taskDescription, taskDueDate, projKey) => {
+  var bodyData = `{
+      "fields": {
+        "project":
+        {
+            "key": "${projKey}"  
+        },
+        "summary": "${taskName}",
+        "description": "${taskDescription}",
+        "issuetype": {
+            "name": "Task"
+        }
+        "duedate": "${taskDueDate}"
+    }
+  }`;
+
+  const final = await api.asApp().requestJira(route`/rest/api/3/issue`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: bodyData
+    });
+
+    return final
+}
+
+const generateTasks = async (taskData) => {
+  for (const key in taskData) {
+    try{
+      const { start_date, end_date, issue, assignees } = taskData[key];
+      const final = await GenerateTask(start_date, issue, end_date, 'IP');
+      return final
+    } catch (err) {
+      return {'message': err}
+    }
+  }    
+    // You can also use the 'assignees' property to assign the task to specific team members.
+}
+
 // async function GenerateProjectPlan(start_date, end_date, project_description, tech_stack, features, team_members) {
 const generateProjectPlan = async (planData) => {
   let llmResponse;
@@ -88,13 +131,15 @@ const generateProjectPlan = async (planData) => {
       features: features,
       team_members: team_members,
     });
-    //llmResponse = JSON.parse(result);
-    return { message: result }
+    //return await generateTasks(JSON.parse(result));
+    llmResponse = JSON.parse(result);
+    const final = await generateTasks(llmResponse);
+    return final
+    // return { message: result }
   } catch (err) {
     console.log(err);
     return { message: err}
   }
-  //return llmResponse;
 }
 
 asyncResolver.define('promptEventListener', async (queueItem) => {

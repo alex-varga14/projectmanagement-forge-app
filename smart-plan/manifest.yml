@@ -24,12 +24,13 @@ resources:
     path: src/frontend/index.jsx
 permissions:
   scopes:
+    - write:jira-work
     - storage:app
   external:
     fetch:
       backend:
-        - 'api.openai.com'
-        - 'https://api.smith.langchain.com'
+        - api.openai.com
+        - https://api.smith.langchain.com
 app:
   id: ari:cloud:ecosystem::app/8aa768aa-1796-44a5-8072-12a2b568d846
   runtime:
